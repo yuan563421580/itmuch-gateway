@@ -53,10 +53,54 @@ public class GatewayApplication {
      *     ~ 03).编写自定义谓词工厂泛型配置类进行承载 TimeBetweenConfig （具体进入查看细节）
      *     ~ 04).测试：http://localhost:8040/users/1
      *
+     * · 过滤器工厂详解 GatewayFilter Factories
+     *     ~ 手记：https://www.imooc.com/article/290816
+     *     ~ 01).application.yml 中配置 ：spring.cloud.gateway.routes.filters （具体进入查看细节）
+     *     ~ 02).测试：http://localhost:8040/users/1
+     *          技巧：断点打在 org.springframework.cloud.gateway.filter.NettyRoutingFilter#filter ，
+     *              就可以调试Gateway转发的具体细节了。
      *
+     * · Gateway 过滤器声命周期 ：Spring Cloud Gateway 以转发请求为边界
+     *     ~ pre : Gateway 转发请求之前
+     *     ~ post : Gateway 转发请求之后
      *
+     * · 自定义过滤器工厂方式
+     *     ~ 方式 1). 继承 ：AbstractGatewayFilterFactory ； 需要在 application.yml 中实现配置
+     *            spring:
+     *              cloud:
+     *               gateway:
+     *                routes:
+     *                  filters:
+     *                  # 过滤器工厂的名称
+     *                  - name: RequestSize
+     *                    # 该过滤器工厂的参数
+     *                    args:
+     *                      maxSize: 500000
+     *          参考事例：org.springframework.cloud.gateway.filter.factory.RequestHeaderSizeGatewayFilterFactory
+     *     ~ 方式 2). 继承 ：AbstractNameValueGatewayFilterFactory ； 需要在 application.yml 中实现配置
+     *            spring:
+     *              cloud:
+     *               gateway:
+     *                routes:
+     *                  filters:
+     *                  # 过滤器工厂的名称及参数以name-value的形式配置
+     *                  - AddRequestHeader=S-Header, Bar
+     *          参考事例：org.springframework.cloud.gateway.filter.factory.AddRequestHeaderGatewayFilterFactory
+     * · 自定义过滤器工厂 - 核心API
+     *     ~ exchange.getRequest().mutate().xxx：修改 request
+     *     ~ exchange.mutate().xxx：修改 exchange
+     *     ~ chain.filter(exchange)：传递给下一个过滤器处理
+     *     ~ exchange.getResponse()：获取响应对象
+     *     exchange 实际类型为 ServerWebExchange，chain 实际类型为 GatewayFilter
+     * · 编写一个自定义过滤器工厂 - 实现功能：记录打印日志
+     *     ~ 01).编写自定义过滤器工厂实现类 PreLogGatewayFilterFactory （具体进入查看细节）
+     *     ~ 02).application.yml 中配置 ：spring.cloud.gateway.routes.filters.-PreLog （具体进入查看细节）
+     * · 全局过滤器（Global Filters）：
+     *     ~ 手记：https://www.imooc.com/article/290821
+     *     LoadBalancerClient Filter 和 Netty Write Response Filter 特别重要 TODO 学习一下
      *
-     *
+     * Spring Cloud Gateway 整合 Sentinel
+     * https://blog.csdn.net/dsh153/article/details/105218152
      */
 
 }
