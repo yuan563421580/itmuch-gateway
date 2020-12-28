@@ -24,6 +24,13 @@ spring:
             # 为原始请求添加名为 X-Request-Foo ，值为 Bar 的请求头
             - AddRequestHeader=X-Request-Foo, Bar
             - PreLog=a,b
+    # 添加 sentinel 服务地址
+    sentinel:
+      transport:
+        dashboard: localhost:8849
+        port: 8849
+      # 服务启动直接建立心跳连接
+      eager: true
 
 # 服务健康检查
 management:
@@ -35,3 +42,5 @@ management:
     health:
       # 展示详情
       show-details: always
+
+
