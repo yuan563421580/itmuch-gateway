@@ -15,22 +15,48 @@ spring:
           # 让 gateway 通过服务发现组件找到其他的微服务
           enabled: true
       routes:
-        - id: timebetween_route
+        - id: user-center-id
           uri: lb://user-center
           predicates:
+            - Path=/users/**
             # 符合时间范围，才会转发到用户微服务
             - TimeBetween=上午0:00,下午11:59
           filters:
             # 为原始请求添加名为 X-Request-Foo ，值为 Bar 的请求头
             - AddRequestHeader=X-Request-Foo, Bar
+            # 自定义过滤器工厂 PreLogGatewayFilterFactory
             - PreLog=a,b
-    # 添加 sentinel 服务地址
-    sentinel:
-      transport:
-        dashboard: localhost:8849
-        port: 8849
-      # 服务启动直接建立心跳连接
-      eager: true
+            # Gateway 限流
+            - name: RequestRateLimiter
+              args:
+                # 令牌桶每秒填充平均速率
+                redis-rate-limiter.replenishRate: 1
+                # 令牌桶的上限
+                redis-rate-limiter.burstCapacity: 2
+                # 使用SpEL表达式从Spring容器中获取Bean对象
+                key-resolver: "#{@pathKeyResolver}"
+        - id: content-center-id
+          uri: lb://content-center
+          predicates:
+            - Path=/shares/**,/admin/**
+            # 符合时间范围，才会转发到用户微服务
+            - TimeBetween=上午0:00,下午11:59
+          filters:
+            - PreLog=aa,bb
+
+    # 添加 sentinel 服务地址 , 使用 Gateway 限流时注释掉
+#    sentinel:
+#      transport:
+#        dashboard: localhost:8849
+#        port: 8849
+#      # 服务启动直接建立心跳连接
+#      eager: true
+
+  # 配置 redis
+  redis:
+    host: 39.102.66.189
+    port: 6379
+    password: redis123456
 
 # 服务健康检查
 management:
@@ -42,5 +68,4 @@ management:
     health:
       # 展示详情
       show-details: always
-
 

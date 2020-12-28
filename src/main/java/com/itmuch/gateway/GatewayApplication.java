@@ -195,6 +195,12 @@ public class GatewayApplication {
      *                          漏桶算法的两个变量：水桶漏洞的大小：rate 、最多可以存多少的水：burst
      *         - 02)、令牌桶算法 ：系统按照恒定间隔向水桶里加入令牌（Token），如果桶满了的话，就不加了。
      *                          每个请求来的时候，会拿走1个令牌，如果没有令牌可拿，那么就拒绝服务。
+     *    ~ 实现步骤：
+     *         - 01)、pom.xml 中引入依赖：spring-boot-starter-data-redis-reactive
+     *         - 02)、application.yml 文件添加 redis 和 RequestRateLimiter
+     *                  spring.redis
+     *                  spring.cloud.gateway.routes.filters:- name: RequestRateLimiter
+     *         - 03)、编写配置类 ：RateConfiguration
      *
      */
 

@@ -23,7 +23,7 @@ public class PreLogGatewayFilterFactory extends AbstractNameValueGatewayFilterFa
     public GatewayFilter apply(NameValueConfig config) {
 
         // 使用 lambda 表达式方式实现 匿名内部类 逻辑
-        /*return ((exchange, chain) -> {
+        return ((exchange, chain) -> {
             // 这里面才是实际处理业务的逻辑
 
             log.info("请求进来了...{},{}", config.getName(), config.getValue());
@@ -40,11 +40,11 @@ public class PreLogGatewayFilterFactory extends AbstractNameValueGatewayFilterFa
 
             // 交给下一个过滤器
             return chain.filter(modifiedExchange);
-        });*/
+        });
 
         /** 实现自定义 Filter 控制 Order */
 
-        GatewayFilter filter = ((exchange, chain) -> {
+        /*GatewayFilter filter = ((exchange, chain) -> {
             // 这里面才是实际处理业务的逻辑
 
             log.info("请求进来了...{},{}", config.getName(), config.getValue());
@@ -63,7 +63,7 @@ public class PreLogGatewayFilterFactory extends AbstractNameValueGatewayFilterFa
             return chain.filter(modifiedExchange);
         });
         // 设置一个需要的 Order 值
-        return new OrderedGatewayFilter(filter, 10000);
+        return new OrderedGatewayFilter(filter, 10000);*/
 
     }
 }
