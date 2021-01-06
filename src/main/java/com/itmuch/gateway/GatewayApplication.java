@@ -202,6 +202,10 @@ public class GatewayApplication {
      *                  spring.cloud.gateway.routes.filters:- name: RequestRateLimiter
      *         - 03)、编写配置类 ：RateConfiguration
      *
+     * ---
+     *
+     * · JWT : JWT 全称是Json Web Token , 是一个开放标准（RFC 7519）, 用来在各方之间安全地传输信息。
+     *          JWT 可被验证和信任，因为它是数字签名的。
      */
 
 }
